@@ -39,13 +39,14 @@ class EthernetAnalyzer:
         except Exception as e:
             print(f"Erro ao analisar pacote scapy: {e}")
             
-    def start_capture(self, iface="eth0", count=1):
+    def start_capture(self, iface="Intel(R) Wireless-AC 9462", count=5, bpf_filter="ether"):
         """
-        Inicia a captura de pacotes na interface especificada.
-        'prn' é a função de callback chamada a cada pacote capturado.
+        Inicia a captura de pacotes na interface especificada com um filtro BPF.
+        O filtro padrão é 'ether' (Camada 2). Use 'arp' para Pacotes ARP ou 'ip' para IPv4.
         """
-        print(f"\nIniciando a captura na interface '{iface}'. Aguardando {count} pacote(s)...")
-        # O 'prn=self.analyze_scapy_packet' faz com que cada pacote capturado 
-        # seja enviado para o nosso método de análise
-        sniff(iface=iface, count=count, prn=self.analyze_scapy_packet, store=0)
+        print(f"\nIniciando a captura na interface '{iface}'. Aguardando {count} pacote(s) com filtro '{bpf_filter}'...")
+        
+        # O argumento 'filter' agora usa a variável bpf_filter
+        sniff(iface=iface, count=count, prn=self.analyze_scapy_packet, filter=bpf_filter, store=0)
+        
         print("Captura finalizada.")
